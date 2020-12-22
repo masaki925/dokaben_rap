@@ -12,9 +12,9 @@ logger = getLogger(__name__)
 tagger = GenericTagger()
 
 class RhymeDistanceMeter:
-    def __init__(self, chara_word):
+    def __init__(self, chara_word='野球'):
         self.c = chara_word
-        self.baseline_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../data/bert-base-multilingual-cased.tsv')
+        self.baseline_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../data/bert-base-multilingual-cased.tsv')
         self.scorer = BERTScorer(model_type='cl-tohoku/bert-base-japanese-whole-word-masking', num_layers=11, lang='ja', rescale_with_baseline=True, baseline_path=self.baseline_file_path)
         self.min_rhyme = 2
 
@@ -24,6 +24,15 @@ class RhymeDistanceMeter:
         len_rate = self.len_rate(s1, s2)
         dist = self.calc_dist(rhyme_count, sim_s, sim_c, len_rate)
         return dist
+
+    def most_rhyming(self, killer_phrase, candidates, topn=3):
+        res = {}
+        for c in candidates:
+            res[c] = self.count_rhyme(killer_phrase, c)
+        logger.debug(f'{res=}')
+        sorted_res = sorted(res.items(), key=lambda item: item[1], reverse=True)
+
+        return [w[0] for w in sorted_res[:topn]]
 
     def len_rate(self, s1, s2):
         return min(len(s1), len(s2)) / max(len(s1), len(s2))
@@ -91,15 +100,6 @@ class RhymeDistanceMeter:
         logger.debug(f'{sim_c=}')
         logger.debug(f'{len_rate=}')
         return int(count ** ((1 - sim_s) * (sim_c * 10) * (1 + len_rate)))
-
-    def most_rhyming(self, killer_phrase, candidates, topn=3):
-        res = {}
-        for c in candidates:
-            res[c] = self.count_rhyme(killer_phrase, c)
-        logger.debug(f'{res=}')
-        sorted_res = sorted(res.items(), key=lambda item: item[1], reverse=True)
-
-        return [w[0] for w in sorted_res[:topn]]
 
 
 if __name__ == '__main__':

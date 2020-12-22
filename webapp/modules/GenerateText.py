@@ -28,7 +28,7 @@ class GenerateText(object):
     文章生成用クラス
     """
 
-    def __init__(self, w2v_model_path=None, chain_db_path=None):
+    def __init__(self, chara_word='野球', w2v_model_path=None, chain_db_path=None):
         """
         初期化メソッド
         @param n いくつの文章を生成するか
@@ -38,8 +38,8 @@ class GenerateText(object):
         self.w2v_file_path = w2v_model_path or './data/jawiki.word_vectors.200d.bin'
         self.w2v_vectors = KeyedVectors.load_word2vec_format(self.w2v_file_path, binary=True)
         self.chain_db_path = chain_db_path or PrepareChain.DB_PATH
-        self.chara_word = '野球'
-        self.rdm = RhymeDistanceMeter(self.chara_word)
+        self.chara_word = chara_word
+        self.rdm = RhymeDistanceMeter(chara_word=self.chara_word)
         self.topn = 3
         self.killer_phrases = [
             '味噌と米ありゃ理想と言える',
