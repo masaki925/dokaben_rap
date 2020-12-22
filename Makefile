@@ -3,9 +3,17 @@
 
 IMAGE_TAG = registry.heroku.com/mc-dokaben/web
 
+APP_HOST = http://localhost
+APP_PORT = 5000
+APP_EP   = rap
+QUERY   = おまえの母ちゃんでべそ おまえの父ちゃん寝ゲロ
+
 usage:
 	@echo "USAGE:"
 	@echo "    make build"
+
+test:
+	curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{ \"verse\": \"$(QUERY)\" }" $(APP_HOST):$(APP_PORT)/$(APP_EP)
 
 build: ## build Docker image
 	docker build -t $(IMAGE_TAG) .
