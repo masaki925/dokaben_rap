@@ -2,12 +2,14 @@ import os
 import json
 import re
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 from modules.GenerateText import GenerateText
 from modules.rhyme_distance_meter import RhymeDistanceMeter
 
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
+
 data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 w2v_model_path = os.path.join(data_dir, 'jawiki.word_vectors.200d.bin')
 chain_db_path  = os.path.join(data_dir, 'chain.db')
@@ -39,7 +41,11 @@ def rap():
     print(f'{gen_txt}')
     print(f'{distance=}')
 
-    return gen_txt
+    return jsonify({
+        "receive_distance": vd,
+        "gen_text": gen_txt,
+        "gen_distance": distance
+    })
 
 
 if __name__ == '__main__':
