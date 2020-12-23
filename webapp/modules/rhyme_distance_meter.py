@@ -1,12 +1,13 @@
 
 import os, sys
-from logging import getLogger
+from logging import getLogger, basicConfig, DEBUG
 
 from bert_score import BERTScorer
 from fugashi import GenericTagger
 
 from .utils import romanize, romanize_sentence, vowelize
 
+# basicConfig(level=DEBUG)
 logger = getLogger(__name__)
 
 tagger = GenericTagger()
@@ -14,8 +15,9 @@ tagger = GenericTagger()
 class RhymeDistanceMeter:
     def __init__(self, chara_word='野球'):
         self.c = chara_word
-        self.baseline_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../data/bert-base-multilingual-cased.tsv')
-        self.scorer = BERTScorer(model_type='cl-tohoku/bert-base-japanese-whole-word-masking', num_layers=11, lang='ja', rescale_with_baseline=True, baseline_path=self.baseline_file_path)
+        data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data')
+        self.baseline_file_path = os.path.join(data_dir, 'bert-base-multilingual-cased.tsv')
+        self.scorer = BERTScorer(model_type=os.path.join(data_dir, 'bert-base_mecab-ipadic-bpe-32k_whole-word-mask'), num_layers=11, lang='ja', rescale_with_baseline=True, baseline_path=self.baseline_file_path)
         self.min_rhyme = 2
 
     def throw(self, s1, s2):

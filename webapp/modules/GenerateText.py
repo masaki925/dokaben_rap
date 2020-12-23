@@ -35,7 +35,7 @@ class GenerateText(object):
         """
         self.req_word = ''
         self.first_prefix = ''
-        self.w2v_file_path = w2v_model_path or './data/jawiki.word_vectors.200d.bin'
+        self.w2v_file_path = w2v_model_path or '../data/jawiki.word_vectors.200d.bin'
         self.w2v_vectors = KeyedVectors.load_word2vec_format(self.w2v_file_path, binary=True)
         self.chain_db_path = chain_db_path or PrepareChain.DB_PATH
         self.chara_word = chara_word
