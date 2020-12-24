@@ -12,7 +12,7 @@ usage:
 	@echo "USAGE:"
 	@echo "    make build"
 
-test:
+test: ## APP_HOST, APP_PORT, APP_EP
 	curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{ \"verse\": \"$(QUERY)\" }" $(APP_HOST):$(APP_PORT)/$(APP_EP)
 
 build: ## build Docker image

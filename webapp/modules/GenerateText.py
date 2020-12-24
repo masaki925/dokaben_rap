@@ -8,6 +8,7 @@ import os.path
 import sqlite3
 import random
 import sys
+import yaml
 
 from logging import basicConfig, getLogger, DEBUG, ERROR
 
@@ -33,42 +34,17 @@ class GenerateText(object):
         初期化メソッド
         @param n いくつの文章を生成するか
         """
+        data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data')
+
         self.req_word = ''
         self.first_prefix = ''
-        self.w2v_file_path = w2v_model_path or '../data/jawiki.word_vectors.200d.bin'
+        self.w2v_file_path = w2v_model_path or os.path.join(data_dir, 'jawiki.word_vectors.200d.bin')
         self.w2v_vectors = KeyedVectors.load_word2vec_format(self.w2v_file_path, binary=True)
         self.chain_db_path = chain_db_path or PrepareChain.DB_PATH
         self.chara_word = chara_word
         self.rdm = RhymeDistanceMeter(chara_word=self.chara_word)
         self.topn = 3
-        self.killer_phrases = [
-            '味噌と米ありゃ理想と言える',
-            '仲間がいるよ！！！',
-            'とうさん。やったんだんぜ。おれは！',
-            'ばかやろう。親子の間でそんな遠慮いるかい… おまえをこのままうずもらせてたまるか… そのためには片目が… 両目だって惜しくはないわい。',
-            '角膜移植か…不知火はお父さんの片目をもらって復活してきたのか。再起をかけた一打だからこそあれだけ喜んだのか。',
-            '打てなくともその倍守る。あの山田まさしく20年に一人の捕手だぜ。',
-            'やった太郎。よくこわがらずにやったぞ。 これだ。この勇気がサチ子を助けたんじゃ。',
-            '悔しいてわいは涙するんやないで。わいがいながら負けたことがなさけのうてほえとるんじゃい。',
-            '山田、おれたちはまだ人生18年だ。苦しいとか辛いなんていう柄じゃないんだな。',
-            'おじさんはハゲや。そやさかいハゲも髪型のひとつなんや！気にせんと頑張らな。',
-            '血は・・・血はグラウンドで流すもの',
-            'これは俺達の血と汗が混じった高知の土だ',
-            '泣くな武蔵、胸を張れ',
-            '俺達の思い出に残る大会にしようぜ',
-            'お兄ちゃん、また勝てなかったよ',
-            'うぇへへ・・・おまたせしやした、山田君',
-            '天才か・・・思えばそう言われたこともあったづらな・・・',
-            'こめ・・・米が・・・もらえない',
-            '勝たなあかんねん',
-            '俺達は１０００円作るのに苦労したんだ・・・こいつを倒すまで俺は野球をやめねぇ',
-            'あーばよぉー、まーたなぁー',
-            'まだ裏があらーね',
-            'オヤジ・・・今分かったぜ。球汚れなく道険し・・・道、けわし・・・',
-            'こんなものしてるからいかんのだ！',
-            '俺達はガキの頃から野球やってきたんだ。あんなニワカな奴らに負けたら全国の球児に申し訳が立たんってもんだ！',
-            '俺は本当に後悔しているぜ。こんな奴だとは知らずに３年間努力したことを・・・。。。かなうはずないよな。。。',
-        ]
+        self.killer_phrases = yaml.load(open(os.path.join(data_dir, 'killer_phrases.yml'), 'rb'))
 
     def __max_distance(self, text_list, killer_phrase):
         max_distance = -1

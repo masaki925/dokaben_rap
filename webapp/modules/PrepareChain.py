@@ -6,6 +6,7 @@
 
 import unittest
 
+import os.path
 import re
 import MeCab
 import sqlite3
@@ -21,7 +22,8 @@ class PrepareChain(object):
     BEGIN = "__BEGIN_SENTENCE__"
     END = "__END_SENTENCE__"
 
-    DB_PATH = "chain.db"
+    data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data')
+    DB_PATH = os.path.join(data_dir, "chain.db")
     DB_SCHEMA_PATH = "schema.sql"
 
     def __init__(self, text):
