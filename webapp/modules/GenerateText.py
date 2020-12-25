@@ -9,6 +9,7 @@ import sqlite3
 import random
 import sys
 import yaml
+from yaml import BaseLoader
 
 from logging import basicConfig, getLogger, DEBUG, ERROR
 
@@ -44,7 +45,7 @@ class GenerateText(object):
         self.chara_word = chara_word
         self.rdm = RhymeDistanceMeter(chara_word=self.chara_word)
         self.topn = 3
-        self.killer_phrases = yaml.load(open(os.path.join(data_dir, 'killer_phrases.yml'), 'rb'))
+        self.killer_phrases = yaml.load(open(os.path.join(data_dir, 'killer_phrases.yml'), 'rb'), Loader=BaseLoader)
 
     def __max_distance(self, text_list, killer_phrase):
         max_distance = -1

@@ -30,7 +30,14 @@ def rap():
         data = json.loads(jsons)
         verse = data['verse']
 
-    v1, v2 = re.split('\W+', verse)
+    try:
+        v1, v2 = re.split('\W+', verse)
+    except ValueError as err:
+        print(f'{err=}')
+        return jsonify({
+            "code": "INVALID_VERSE",
+            "msg": "ちょっと何言ってるかわかんないや。句読点や改行、スペースで区切った2小節でよろしく。"
+        })
 
     vd = rdm.throw(v1, v2)
 
@@ -42,6 +49,7 @@ def rap():
     print(f'{distance=}')
 
     return jsonify({
+        "code": "OK",
         "receive_distance": vd,
         "gen_text": gen_txt,
         "gen_distance": distance

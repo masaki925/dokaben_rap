@@ -4,3 +4,4 @@ __pycache__
 *.tar.xz
 webapp/data/*
 !**/.gitkeep
+.env

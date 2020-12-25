@@ -73,16 +73,16 @@ class RhymeDistanceMeter:
         refs = [s1]
         hyps = [s2]
 
-        s1_meishi = [w.surface for w in tagger(s1) if w.feature[0] == '名詞']
-        s2_meishi = [w.surface for w in tagger(s2) if w.feature[0] == '名詞']
-        logger.debug(f'{s1_meishi=}')
-        logger.debug(f'{s2_meishi=}')
+        s1_nouns = [w.surface for w in tagger(s1) if (w.feature[0] == '名詞' and w.surface != self.c)]
+        s2_nouns = [w.surface for w in tagger(s2) if (w.feature[0] == '名詞' and w.surface != self.c)]
+        logger.debug(f'{s1_nouns=}')
+        logger.debug(f'{s2_nouns=}')
 
-        for s in s1_meishi:
+        for s in s1_nouns:
             refs.append(self.c)
             hyps.append(s)
 
-        for s in s2_meishi:
+        for s in s2_nouns:
             refs.append(self.c)
             hyps.append(s)
 
